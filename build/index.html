@@ -1,0 +1,139 @@
+<!doctype html>
+<!--
+Copyright 2018 The Go Authors. All rights reserved.
+Use of this source code is governed by a BSD-style
+license that can be found in the LICENSE file.
+-->
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Go wasm</title>
+	<style>
+		.flex-container {
+			  display: flex;
+			  flex-wrap: nowrap;
+			  background-color: DodgerBlue;
+			  justify-content: center;
+
+			}
+			
+			.flex-container > div {
+			  background-color: #f1f1f1;
+			  width: 400px;
+			  margin: 10px;
+			  text-align: center;
+			  line-height: 75px;
+			  font-size: 30px;
+			}
+
+			.inputType  {
+			  line-height: 1px;
+			  font-size: 14px;
+			  display: inline-flex;
+			}
+			
+			</style>
+</head>
+
+<body>
+	<header>
+
+	</header>
+	<main>
+
+		<div class="flex-container">
+
+			<div>
+				<div class="inputType" id="requestType">
+					<input type="radio" name="requestType" value="json" checked>json<br>
+					<!-- <input type="radio" name="requestType" value="yaml">yaml<br>
+					<input type="radio" name="requestType" value="xml">xml<br>
+					<input type="radio" name="requestType" value="toml">toml<br> -->
+				</div>
+
+				<textarea rows="20" cols="50" id="request">
+{
+    "title": "Humans",
+    "data": [
+        {
+            "firstName": "James",
+            "lastName": "Darakjy",
+            "occupation": "Foo",
+            "phone": "504-621-8927"
+        },
+        {
+            "firstName": "Mitsue",
+            "lastName": "Dilliard",
+            "occupation": "Bar",
+            "phone": "513-570-18939"
+        }
+    ]
+}
+				</textarea>
+			</div>
+
+
+			<div style="flex-basis:100px">
+				<button onClick="convert(getRadioValue('requestType'), getRadioValue('responseType'));" id="submit">convert</button>
+			</div>
+
+
+			<div>
+				<div class="inputType" id="responseType">
+					<input type="radio" name="responseType" value="json">json<br>
+					<input type="radio" name="responseType" value="yaml" checked>yaml<br>
+					<!-- <input type="radio" name="responseType" value="xml">xml<br>
+					<input type="radio" name="responseType" value="toml">toml<br> -->
+				</div>
+				<textarea rows="20" cols="50" id="response"></textarea>
+			</div>
+
+
+		</div>
+
+
+	</main>
+	<footer>
+
+	</footer>
+
+
+	<!--
+	Add the following polyfill for Microsoft Edge 17/18 support:
+	<script src="https://cdn.jsdelivr.net/npm/text-encoding@0.7.0/lib/encoding.min.js"></script>
+	(see https://caniuse.com/#feat=textencoder)
+	-->
+	<script src="wasm_exec.js"></script>
+	<script>
+		if (!WebAssembly.instantiateStreaming) { // polyfill
+			WebAssembly.instantiateStreaming = async (resp, importObject) => {
+				const source = await (await resp).arrayBuffer();
+				return await WebAssembly.instantiate(source, importObject);
+			};
+		}
+		const go = new Go();
+
+		let mod, inst;
+		WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then(async (result) => {
+			mod = result.module;
+			inst = result.instance;
+			await go.run(inst);
+		});
+
+		function getRadioValue(name) {
+			var group = document.getElementsByName(name);
+
+			for (var i = 0; i < group.length; i++) {
+				if (group[i].checked) {
+					return group[i].value;
+				}
+			}
+
+			return '';
+		};
+
+	</script>
+</body>
+
+</html>
