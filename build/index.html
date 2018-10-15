@@ -12,15 +12,14 @@ license that can be found in the LICENSE file.
 	<style>
 		.flex-container {
 			  display: flex;
-			  flex-wrap: nowrap;
-			  background-color: DodgerBlue;
+			  flex-wrap: wrap;
 			  justify-content: center;
 
 			}
 			
 			.flex-container > div {
-			  background-color: #f1f1f1;
-			  width: 400px;
+			  min-width: 340px;
+			  max-width: 400px;
 			  margin: 10px;
 			  text-align: center;
 			  line-height: 75px;
@@ -28,10 +27,27 @@ license that can be found in the LICENSE file.
 			}
 
 			.inputType  {
-			  line-height: 1px;
-			  font-size: 14px;
 			  display: inline-flex;
+			  line-height: 1px;
+			position: relative;
+			padding-left: 35px;
+			margin-bottom: 12px;
+			cursor: pointer;
+			font-size: 12px;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
 			}
+
+			.card {
+			 background-color: #f1f1f1;
+
+			}
+
+
+
+			textarea { resize: vertical; } 
 			
 			</style>
 </head>
@@ -44,16 +60,15 @@ license that can be found in the LICENSE file.
 
 		<div class="flex-container">
 
-			<div>
+			<div class="card">
 				<div class="inputType" id="requestType">
-					<input type="radio" name="requestType" value="json" checked>json<br>
-					<!-- <input type="radio" name="requestType" value="yaml">yaml<br>
-					<input type="radio" name="requestType" value="xml">xml<br>
-					<input type="radio" name="requestType" value="toml">toml<br> -->
+					<input type="radio" name="requestType" value="json" checked>json
+					<input type="radio" name="requestType" value="yaml" disabled>yaml
+					<input type="radio" name="requestType" value="xml" disabled>xml
+					<input type="radio" name="requestType" value="toml" disabled>toml
 				</div>
 
-				<textarea rows="20" cols="50" id="request">
-{
+				<textarea rows="20" cols="45" id="request">{
     "title": "Humans",
     "data": [
         {
@@ -69,24 +84,23 @@ license that can be found in the LICENSE file.
             "phone": "513-570-18939"
         }
     ]
-}
-				</textarea>
+}</textarea>
 			</div>
 
 
-			<div style="flex-basis:100px">
+			<div style="flex-basis:100px; min-width: 100px; align-self: center;">
 				<button onClick="convert(getRadioValue('requestType'), getRadioValue('responseType'));" id="submit">convert</button>
 			</div>
 
 
-			<div>
+			<div class="card">
 				<div class="inputType" id="responseType">
-					<input type="radio" name="responseType" value="json">json<br>
-					<input type="radio" name="responseType" value="yaml" checked>yaml<br>
-					<!-- <input type="radio" name="responseType" value="xml">xml<br>
-					<input type="radio" name="responseType" value="toml">toml<br> -->
+					<input type="radio" name="responseType" value="json">json
+					<input type="radio" name="responseType" value="yaml" checked>yaml
+					<input type="radio" name="responseType" value="xml" disabled>xml
+					<input type="radio" name="responseType" value="toml" disabled>toml
 				</div>
-				<textarea rows="20" cols="50" id="response"></textarea>
+				<textarea rows="20" cols="45" id="response"></textarea>
 			</div>
 
 
